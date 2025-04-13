@@ -1,5 +1,6 @@
 streamlit
 scikit-learn
+sklearn
 pandas
 numpy
 PyPDF2
