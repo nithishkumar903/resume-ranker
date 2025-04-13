@@ -81,7 +81,7 @@ with stylable_container(
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     if st.button("Login"):
-        if username == "admin" and password == "admin123":
+        if username == "Nithish" and password == "Nithish8897":
             st.success("Logged in successfully!")
         else:
             st.error("Invalid credentials.")
