@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import psycopg2
 from psycopg2 import sql
-from streamlit_extras.switch_page_button import switch_page
-from streamlit_extras.stylable_container import stylable_container
 import time
 
 # Page Configuration
@@ -67,17 +65,15 @@ def connect_db():
         port=5432
     )
 
-# Authentication (Simple UI)
-with stylable_container("login", css={"padding": "10px", "margin-bottom": "20px"}):
-    with st.expander("🔐 Login to Save Resume Results"):
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        login = st.button("Login")
-        if login:
-            if username == "admin" and password == "admin123":
-                st.success("Logged in successfully!")
-            else:
-                st.error("Invalid credentials.")
+# Simple Login (basic placeholder)
+st.sidebar.subheader("🔐 Login (for demo)")
+username = st.sidebar.text_input("Username")
+password = st.sidebar.text_input("Password", type="password")
+if st.sidebar.button("Login"):
+    if username == "admin" and password == "admin123":
+        st.sidebar.success("Logged in as admin")
+    else:
+        st.sidebar.error("Invalid credentials")
 
 # Upload Resume
 uploaded_file = st.file_uploader("📄 Upload Resume (PDF or TXT only)", type=["pdf", "txt"])
