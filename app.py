@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import psycopg2
 from psycopg2 import sql
+from streamlit_extras.stylable_container import stylable_container
 import time
 
 # Page Configuration
@@ -65,15 +66,25 @@ def connect_db():
         port=5432
     )
 
-# Simple Login (basic placeholder)
-st.sidebar.subheader("🔐 Login (for demo)")
-username = st.sidebar.text_input("Username")
-password = st.sidebar.text_input("Password", type="password")
-if st.sidebar.button("Login"):
-    if username == "admin" and password == "admin123":
-        st.sidebar.success("Logged in as admin")
-    else:
-        st.sidebar.error("Invalid credentials")
+# Stylish Login Section
+with stylable_container(
+    key="login",
+    css_styles="""
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #1e293b;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    """
+):
+    st.subheader("🔐 Login to access dashboard")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if username == "admin" and password == "admin123":
+            st.success("Logged in successfully!")
+        else:
+            st.error("Invalid credentials.")
 
 # Upload Resume
 uploaded_file = st.file_uploader("📄 Upload Resume (PDF or TXT only)", type=["pdf", "txt"])
