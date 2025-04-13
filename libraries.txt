@@ -1,0 +1,10 @@
+ streamlit
+scikit-learn
+pandas
+numpy
+PyPDF2
+python-docx
+docx2txt
+sqlalchemy
+psycopg2-binary
+python-dotenv

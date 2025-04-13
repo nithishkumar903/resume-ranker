@@ -1,0 +1,28 @@
+# Ignore virtual environment
+env/
+venv/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+
+# Ignore Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Ignore local database (SQLite)
+*.db
+
+# Ignore sensitive environment variables
+.env
+
+# Ignore compiled files
+*.log
+*.sqlite3
+
+# Ignore VS Code and PyCharm project files
+.vscode/
+.idea/
