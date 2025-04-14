@@ -4,6 +4,11 @@ import psycopg2
 from psycopg2 import sql
 from streamlit_extras.stylable_container import stylable_container
 import time
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Page Configuration
 st.set_page_config(page_title="AI Resume Ranker", page_icon="🤖", layout="wide")
@@ -56,15 +61,10 @@ st.markdown("<div class='main'>", unsafe_allow_html=True)
 st.markdown("<div class='title'>AI Resume Ranking System 🚀</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Upload a resume and we'll rank it based on your job criteria.</div><br>", unsafe_allow_html=True)
 
-# Database Connection (PostgreSQL)
+# Database Connection (PostgreSQL via URL)
 def connect_db():
-    return psycopg2.connect(
-        host="localhost",
-        database="resume_ranker",
-        user="postgres",
-        password="your_password",
-        port=5432
-    )
+    db_url = os.getenv("DATABASE_URL")
+    return psycopg2.connect(db_url)
 
 # Stylish Login Section
 with stylable_container(
