@@ -61,7 +61,7 @@ st.markdown("<div class='main'>", unsafe_allow_html=True)
 st.markdown("<div class='title'>AI Resume Ranking System 🚀</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Upload a resume and we'll rank it based on your job criteria.</div><br>", unsafe_allow_html=True)
 
-# Database Connection (PostgreSQL via URL)
+# Database Connection
 def connect_db():
     db_url = os.getenv("DATABASE_URL")
     return psycopg2.connect(db_url)
@@ -102,10 +102,11 @@ if st.button("🔍 Rank Resume"):
             match_count = sum(1 for kw in keyword_list if kw in resume_text.lower())
             score = (match_count / len(keyword_list)) * 100
 
-        st.subheader("📊 Resume Score")
+        st.subheader("📊 Skills Match Score")
         st.progress(int(score))
         st.metric("Match %", f"{score:.2f}%")
 
+        # Save to DB and show ranking
         try:
             conn = connect_db()
             cur = conn.cursor()
@@ -114,13 +115,23 @@ if st.button("🔍 Rank Resume"):
                 VALUES (%s, %s, %s)
             """, (uploaded_file.name, keywords, score))
             conn.commit()
+
+            # Fetch all scores for ranking
+            df = pd.read_sql_query("SELECT filename, score FROM resume_scores ORDER BY score DESC", conn)
             conn.close()
+
+            # Find rank
+            df.reset_index(drop=True, inplace=True)
+            rank = df[df["filename"] == uploaded_file.name].index[0] + 1
+            total = len(df)
+
             st.success("✅ Resume saved to database.")
+            st.info(f"🏆 **This resume ranks #{rank} out of {total} resumes.**")
+
         except Exception as e:
             st.error(f"Database error: {e}")
     else:
         st.warning("⚠️ Please upload a resume and enter keywords.")
-
 # Dashboard View
 with st.expander("📈 Show All Resume Scores"):
     try:
@@ -128,9 +139,21 @@ with st.expander("📈 Show All Resume Scores"):
         df = pd.read_sql_query("SELECT * FROM resume_scores ORDER BY id DESC", conn)
         st.dataframe(df, use_container_width=True)
         conn.close()
+
+        # CSV Download Button
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="⬇️ Download Resume Scores as CSV",
+            data=csv,
+            file_name="resume_scores.csv",
+            mime="text/csv"
+        )
+
     except Exception as e:
         st.error(f"Couldn't load dashboard: {e}")
 
+
+# Footer
 st.markdown("""
 ---
 👨‍💻 Built with ❤️ by your AI team | Dark Mode Enabled 🌙
